@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
 
 import "./utils/Strings.sol";
 
@@ -14,7 +13,7 @@ import "./utils/Strings.sol";
  * See https://eips.ethereum.org/EIPS/eip-1155
  * Originally based on code by Enjin: https://github.com/enjin/erc-1155
  */
-contract LITHplus is Ownable, Pausable, ERC1155 {
+contract LITHplus is Ownable, ERC1155Pausable {
     using OraclizeStrings for string;
 
     string[] public criteria;
@@ -169,38 +168,5 @@ contract LITHplus is Ownable, Pausable, ERC1155 {
      */
     function unpause() external onlyOwner {
         _unpause();
-    }
-
-    /**
-     * @dev See {ERC1155-setApprovalForAll}.
-     */
-    function setApprovalForAll(address operator, bool approved) public virtual override whenNotPaused {
-        super.setApprovalForAll(operator, approved);
-    }
-
-    /**
-     * @dev See {ERC1155-safeTransferFrom}.
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public virtual override whenNotPaused {
-        super.safeTransferFrom(from, to, id, amount, data);
-    }
-
-    /**
-     * @dev See {ERC1155-safeBatchTransferFrom}.
-     */
-    function safeBatchTransferFrom(
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) public virtual override whenNotPaused {
-        super.safeBatchTransferFrom(from, to, ids, amounts, data);
-    }     
+    }   
 }
