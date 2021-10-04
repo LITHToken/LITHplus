@@ -18,4 +18,5 @@ DEPLOYMENT:
 
 create .env file from .env.example updated contents
 
-yarn hardhat run scripts/deploy.js --network ropsten
+yarn hardhat run scripts/deploy-lithplus.js --network ropsten
+yarn hardhat run scripts/deploy-lithplusproxy.js --network ropsten

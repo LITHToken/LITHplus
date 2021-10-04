@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./utils/Strings.sol";
 
 /**
- * @dev Implementation of the Lith sample standard multi-token.
+ * @dev Implementation of the LITHplus sample standard multi-token.
  * See https://eips.ethereum.org/EIPS/eip-1155
  * Originally based on code by Enjin: https://github.com/enjin/erc-1155
  */
@@ -31,7 +31,7 @@ contract LITHplus is OwnableUpgradeable, ERC1155PausableUpgradeable {
     /**
      * @dev See {__LITHHplus_init}.
      */
-    function initialize(string memory uri_, string[] memory meta_) public initializer {
+    function initialize(string memory uri_, string[] memory meta_) public onlyOwner initializer {
         __LITHHplus_init(uri_, meta_);
     }
 
