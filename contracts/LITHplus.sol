@@ -31,7 +31,7 @@ contract LITHplus is OwnableUpgradeable, ERC1155PausableUpgradeable {
     /**
      * @dev See {__LITHHplus_init}.
      */
-    function initialize(string memory uri_, string[] memory meta_) public onlyOwner initializer {
+    function initialize(string memory uri_, string[] memory meta_) public initializer {
         __LITHHplus_init(uri_, meta_);
     }
 
