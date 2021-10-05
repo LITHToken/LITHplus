@@ -24,17 +24,19 @@ module.exports = {
       url: process.env.RINKEBY_PROVIDER_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       timeout: 300000,
+      gasPrice: 1000000000
     },
     ropsten: {
       url: process.env.ROPSTEN_PROVIDER_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       timeout: 300000,
-      gasPrice: 2000000000
+      gasPrice: 3000000000
     },
     kovan: {
       url: process.env.KOVAN_PROVIDER_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       timeout: 300000,
+      gasPrice: 1000000000
     },
   }  
 };

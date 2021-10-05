@@ -2,27 +2,71 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Strings.sol";
 
-
 /**
- * @dev Implementation of the Lith sample standard multi-token.
+ * @dev Implementation of the LITHplus sample standard multi-token.
  * See https://eips.ethereum.org/EIPS/eip-1155
  * Originally based on code by Enjin: https://github.com/enjin/erc-1155
  */
-contract LITHplus is Ownable, ERC1155Pausable {
+contract LITHplus is OwnableUpgradeable, ERC1155PausableUpgradeable {
     using OraclizeStrings for string;
 
-    string[] public criteria;
+    mapping(bytes32 => uint256) internal uIntStorage;
+    mapping(bytes32 => uint256[]) internal uIntArrayStorage;
+    mapping(bytes32 => mapping(uint256 => uint256)) internal uIntMappingStorage;
+    mapping(bytes32 => string) internal stringStorage;
+    mapping(bytes32 => string[]) internal stringArrayStorage;
+    mapping(bytes32 => mapping(string => string)) internal stringMappingStorage;
+    mapping(bytes32 => address) internal addressStorage;
+    mapping(bytes32 => address[]) internal addressArrayStorage;
+    mapping(bytes32 => bytes) internal bytesStorage;
+    mapping(bytes32 => bytes[]) internal bytesArrayStorage;
+  
+    bytes32 internal constant META_POSITION = keccak256("lith.LITHplus.meta");
 
     /**
-     * @dev See {ERC1155}.
+     * @dev See {__LITHHplus_init}.
      */
-    constructor(string memory uri_, string[] memory criteria_) ERC1155(uri_) {
-        criteria = criteria_;
+    function initialize(string memory uri_, string[] memory meta_) public initializer {
+        __LITHHplus_init(uri_, meta_);
+    }
+
+    /**
+     * @dev See {ERC1155Upgradeable}.
+     */
+    function __LITHHplus_init(string memory uri_, string[] memory meta_) internal initializer {
+        __Context_init_unchained();
+        __Ownable_init_unchained();
+        __ERC165_init_unchained();
+        __ERC1155_init_unchained(uri_);
+        __Pausable_init_unchained();
+        __ERC1155Pausable_init_unchained();        
+        __LITHplus_init_unchained(meta_);
+    }
+
+    function __LITHplus_init_unchained(string[] memory meta_) internal initializer {
+        _setmeta(meta_);
+    }
+
+    function _getmeta() internal view returns(string[] storage)
+    {
+        return stringArrayStorage[META_POSITION];
+    }
+
+    function _setmeta(string[] memory meta_) internal
+    {
+        stringArrayStorage[META_POSITION] = meta_;
+    }
+
+    function getmeta(uint256 id_) public view returns(string memory)
+    {
+        string[] storage meta = _getmeta();
+        require(id_ < meta.length, "Invalid id");
+        return meta[id_];
     }
 
     /**
@@ -59,17 +103,19 @@ contract LITHplus is Ownable, ERC1155Pausable {
      * actual token type ID.
      */
     function uri(uint256 id_) public view virtual override returns (string memory) {
-        if (id_ >= criteria.length) return "NOURI";
-        return super.uri(0).strConcat(criteria[id_]);
+        string[] storage meta = _getmeta();
+        if (id_ >= meta.length) return "NOURI";
+        return super.uri(0).strConcat(meta[id_]);
     }
 
    /**
-     * @dev Adds PDF as token type, and assigns them to returned `id`.
+     * @dev Adds META JSON as token type, and assigns them to returned `id`.
      */
-    function addcriteria(string memory criteria_) external onlyOwner returns (uint256 id_) {
-        require(bytes(criteria_).length > 0, "Invalid criteria name");
-        id_ = criteria.length;
-        criteria.push(criteria_);
+    function addmeta(string memory meta_) external onlyOwner returns (uint256 id_) {
+        require(bytes(meta_).length > 0, "Invalid meta file");
+        string[] storage meta = _getmeta();
+        id_ = meta.length;
+        meta.push(meta_);
     }
 
    /**
@@ -89,7 +135,7 @@ contract LITHplus is Ownable, ERC1155Pausable {
         uint256 amount,
         bytes memory data
     ) external onlyOwner {
-        require(id < criteria.length, "Invalid id");
+        require(id < _getmeta().length, "Invalid id");
         super._mint(account, id, amount, data);
     }
 
@@ -109,7 +155,7 @@ contract LITHplus is Ownable, ERC1155Pausable {
         bytes memory data
     ) external onlyOwner {
         uint256 idx = 0;
-        uint256 length = criteria.length;
+        uint256 length = _getmeta().length;
         while(idx < ids.length)
         {
             require(ids[idx] < length, "Invalid id");
@@ -168,5 +214,5 @@ contract LITHplus is Ownable, ERC1155Pausable {
      */
     function unpause() external onlyOwner {
         _unpause();
-    }   
+    }  
 }

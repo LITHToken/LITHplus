@@ -2,9 +2,10 @@ const hre = require("hardhat");
 
 async function main() {
   const LITHplus = await hre.ethers.getContractFactory("LITHplus");
-  const token = await LITHplus.deploy("https://www.lithtoken.io/", []);
+  const token = await LITHplus.deploy();
 
   await token.deployed();
+  await token.initialize("https://www.lithtoken.io/", []);
 
   console.log("LITHplus deployed to:", token.address);
 }
