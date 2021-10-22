@@ -5,7 +5,8 @@ async function main() {
   const token = await LITHplus.deploy();
 
   await token.deployed();
-  await token.initialize("https://www.lithtoken.io/", []);
+  await token.initialize("https://ipfs.io/ipfs/", 
+    ["QmQntdqVXEf1coijvwNi3a5CiRrrg3dfAEc3fmFRUsgWyM", "QmeMVv4xmRHKu39GomAtt9HAYxQU7cmeJ5QL3fTNvEMD36"]);
 
   console.log("LITHplus deployed to:", token.address);
 }
